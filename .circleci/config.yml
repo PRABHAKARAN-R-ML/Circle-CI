@@ -38,10 +38,58 @@ jobs:
           # This assumes pytest is installed via the install-package step above
           command: pytest
 
+  run-main-file:
+    docker:
+      - image: cimg/python:3.11.3
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run: 
+          name: Run tests
+          command: |
+            python run main.py
+
+  run-coverage:
+    docker:
+      - image: cimg/python:3.11.3
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run: 
+          name: Run tests
+          command: |
+            coverage run test_connection.py
+
+
+  Coverage-check:
+    docker:
+      - image: cimg/python:3.11.3
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run: 
+          name: Run tests
+          command: |
+            coverage run test_connection.py 
+            percentage=$(coverage report | awk ' NR==7 {print $4}')
+            percentage="${percentage%"%"}"
+            echo  "${percentage}"
+            if ((percentage<50)); then
+              coverage report --fail-under=50
+            else 
+              echo "Code Coverage is more than 50 % "
+            fi   
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+  flask-app: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
+      - run-main-file
+      - run-coverage
+      - Coverage-check
