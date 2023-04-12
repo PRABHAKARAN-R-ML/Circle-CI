@@ -89,7 +89,9 @@ workflows:
   flask-app: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build-and-test
       - run-main-file
+      - build-and-test :
+            requires:
+                - run-main-file
       - run-coverage
       - Coverage-check
