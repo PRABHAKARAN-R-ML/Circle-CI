@@ -71,4 +71,3 @@ def delete(id):
         abort(404)
  
     return render_template('delete.html')
-app.run(host='localhost', port=5000)
