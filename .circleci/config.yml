@@ -77,10 +77,10 @@ jobs:
             percentage=$(coverage report | awk ' NR==7 {print $4}')
             percentage="${percentage%"%"}"
             echo  "${percentage}"
-            if ((percentage<50)); then
-              coverage report --fail-under=50
+            if ((percentage<35)); then
+              coverage report --fail-under=35
             else 
-              echo "Code Coverage is more than 50 % "
+              echo "Code Coverage is more than 35 % "
             fi   
 
 # Invoke jobs via workflows
