@@ -1,6 +1,5 @@
 import pytest 
 import requests
 def test_connection():
-    url = "http://localhost:5000/data/create"
-    response= requests.get(url=url)
+    response = app.test_client().get("/")
     assert response.status_code == 200
