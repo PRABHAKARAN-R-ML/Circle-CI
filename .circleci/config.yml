@@ -36,12 +36,19 @@ jobs:
       - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
+          command: pytest
+
+  run-app-file:
+    docker:
+      - image: cimg/python:3.11.3
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run: 
+          name: Run tests
           command: |
-            python3 main.py
-            pytest 
-
-
-   
+            python3 app.py
 
   run-coverage:
     docker:
@@ -82,6 +89,7 @@ workflows:
   flask-app: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build-and-test  
+      - run-app-file
+      - build-and-test 
       - run-coverage
       - Coverage-check
